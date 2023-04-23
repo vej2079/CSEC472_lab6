@@ -28,6 +28,7 @@ namespace Quantum.Kata.KeyDistribution {
     open Microsoft.Quantum.Convert;
     open Microsoft.Quantum.Math;
     open Microsoft.Quantum.Random;
+    open Microsoft.Quantum.Bitwise;
     
     //////////////////////////////////////////////////////////////////
     // Part I. Preparation
@@ -78,7 +79,7 @@ namespace Quantum.Kata.KeyDistribution {
 
     // Task 2.3. Measure Harry's qubits
     operation MeasureHarrysQubits_Reference (qs : Qubit[], bases : Bool[]) : Bool[] {
-        for i in 0 .. Length(qs) - 1 {
+        for i in 0 .. Length(qs) - 1 { // Measure([PauliZ], [q]); // where PauliZ is the standard/horizontal basis and q is a qubit ptr
             if bases[i] {
                 H(qs[i]);
             }
@@ -114,7 +115,7 @@ namespace Quantum.Kata.KeyDistribution {
         return IntAsDouble(mismatchCount) / IntAsDouble(N) <= IntAsDouble(errorRate) / 100.0;
     }
 
-    // @EntryPoint()
+    @EntryPoint()
     // Task 2.6. Putting it all together 
     operation T26_BB84Protocol_Reference () : Unit {
         let threshold = 1;
@@ -141,6 +142,11 @@ namespace Quantum.Kata.KeyDistribution {
         if CheckKeysMatch_Reference(keyHermione, keyHarry, threshold) {
             Message($"Successfully generated keys {keyHermione}/{keyHarry}");
         }
+
+        // let toEncrypt = "J" $ string "hello from the quantum world!";
+        let encrypted = Xor(BoolArrayAsInt(keyHermione), 9);
+        let decrypted = Xor(encrypted, BoolArrayAsInt(keyHarry));
+        Message($"Decrypted: {decrypted}");
     }
 
 
