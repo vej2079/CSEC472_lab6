@@ -142,10 +142,10 @@ namespace Quantum.Kata.KeyDistribution {
         if CheckKeysMatch_Reference(keyHermione, keyHarry, threshold) {
             Message($"Successfully generated keys {keyHermione}/{keyHarry}");
         }
-
-        // let toEncrypt = "J" $ string "hello from the quantum world!";
-        let encrypted = Xor(BoolArrayAsInt(keyHermione), 9);
+        let toEncrypt = "hello from the quantum world!";
+        let encrypted = Xor(BoolArrayAsInt(keyHermione), toEncrypt);
         let decrypted = Xor(encrypted, BoolArrayAsInt(keyHarry));
+        Message($"Encrypted: {encrypted}");
         Message($"Decrypted: {decrypted}");
     }
 
@@ -167,7 +167,7 @@ namespace Quantum.Kata.KeyDistribution {
         use qs = Qubit[20];
         // 1. Choose random basis and bits to encode
         let basesHermione = RandomArray_Reference(Length(qs));
-        let bitsHermione = RandomArray_Reference(Length(qs)); // “hello quantum world”
+        let bitsHermione = RandomArray_Reference(Length(qs));
         
         // 2. Hermione prepares her qubits
         PrepareHermionesQubits_Reference(qs, basesHermione, bitsHermione);
@@ -191,6 +191,10 @@ namespace Quantum.Kata.KeyDistribution {
         if CheckKeysMatch_Reference(keyHermione, keyHarry, threshold) {
             Message($"Successfully generated keys {keyHermione}/{keyHarry}");
         } else {
+            Message($"Hermione's basis: {basesHermione}");
+            Message($"Harrys's basis: {basesHarry}");
+            Message($"Hermione's measurements: {bitsHermione}");
+            Message($"Harry's measurements: {bitsHarry}");
             Message($"Caught an eavesdropper, Expelliarmis!"); // discarding the keys {keyHermione}/{keyHarry}");
         }
     }
