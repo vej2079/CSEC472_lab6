@@ -128,19 +128,19 @@ namespace Lab6 {
         // 2. Hermione prepares her qubits
         PrepareHermionesQubits_Reference(qs, basesHermione, bitsHermione);
         
-        // 3. Harry chooses random basis to measure in
+        // 3. Receive qubits
         let basesHarry = RandomArray_Reference(Length(qs));
-
-        // 4. Harry measures Hermione's qubits
         let bitsHarry = MeasureHarrysQubits_Reference(qs, basesHarry);
 
-        // 5. Generate shared key
+        // 4. Generate sifted key
         let keyHermione = GenerateSharedKey_Reference(basesHermione, basesHarry, bitsHermione);
         let keyHarry = GenerateSharedKey_Reference(basesHermione, basesHarry, bitsHarry);
 
-        // 6. Ensure at least the minimum percentage of bits match
+        // 5. Ensure at least the minimum percentage of bits match
         if CheckKeysMatch_Reference(keyHermione, keyHarry, threshold) {
-            Message($"Successfully generated keys {keyHermione}/{keyHarry}");
+            Message($"\nSuccessfully generated keys");
+            Message($"Hermione's key: {keyHermione}");
+            Message($"Harry's key: {keyHarry}");
         }
         let keys = (BoolArrayAsInt(keyHermione), BoolArrayAsInt(keyHarry));
         return keys;
@@ -158,7 +158,7 @@ namespace Lab6 {
 
     // @EntryPoint()
     // Task 3.2. Catch the eavesdropper
-    operation T32_BB84ProtocolWithEavesdropper_Reference () : Unit {
+    operation T32_BB84ProtocolWithEavesdropper_Reference () : (Int,Int) {
         let threshold = 1;
 
         use qs = Qubit[20];
@@ -174,26 +174,28 @@ namespace Lab6 {
             let n = Eavesdrop_Reference(q, DrawRandomBool(0.5));
         }
 
-        // 3. Harry chooses random basis to measure in
+        // 3. Receive qubits
         let basesHarry = RandomArray_Reference(Length(qs));
-
-        // 4. Harry measures Hermione's qubits'
         let bitsHarry = MeasureHarrysQubits_Reference(qs, basesHarry);
 
-        // 5. Generate shared key
+        // 4. Generate sifted key
         let keyHermione = GenerateSharedKey_Reference(basesHermione, basesHarry, bitsHermione);
         let keyHarry = GenerateSharedKey_Reference(basesHermione, basesHarry, bitsHarry);
 
-        // 6. Ensure at least the minimum percentage of bits match
+        // 5. Ensure at least the minimum percentage of bits match
         if CheckKeysMatch_Reference(keyHermione, keyHarry, threshold) {
-            Message($"Successfully generated keys {keyHermione}/{keyHarry}");
+            Message($"\nSuccessfully generated keys");
+            Message($"Hermione's key: {keyHermione}");
+            Message($"Harry's key: {keyHarry}");
         } else {
-            Message($"Hermione's basis: {basesHermione}");
+            Message($"\nHermione's basis: {basesHermione}");
             Message($"Harrys's basis: {basesHarry}");
             Message($"Hermione's measurements: {bitsHermione}");
             Message($"Harry's measurements: {bitsHarry}");
             Message($"Caught an eavesdropper, Expelliarmis!"); // discarding the keys {keyHermione}/{keyHarry}");
         }
+        let keys = (BoolArrayAsInt(keyHermione), BoolArrayAsInt(keyHarry));
+        return keys;
     }
 
     
